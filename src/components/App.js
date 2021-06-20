@@ -17,7 +17,7 @@ import InfoTooltip from "./InfoTooltip";
 
 import { api } from "../utils/api";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
-import * as auth from "../auth.js";
+import * as auth from "../utils/auth.js";
 
 function App(props) {
   const history = useHistory();
@@ -47,6 +47,10 @@ function App(props) {
     setSelectedCard(card);
   };
 
+  // К сожалению, без обнуления текста кнопки получается такой эффект, что, к примеру, после удаления карточки
+  // в любом другом popup (при первом открытии) кнопка будет иметь текст - "Удалить".
+  // В popupWithForm у меня выбор текста кнопки вот так сделан: {buttonText || defaultButtonText}
+  // Поэтому чтобы отрисовать базовый текст мне нужно чтобы buttonText был пустой)) Не соображу как сделать подругому.
   function handleEditAvatarClick() {
     setButtonText("");
     setIsEditAvatarPopupOpen(true);
@@ -152,27 +156,26 @@ function App(props) {
   function tokenCheck() {
     if (localStorage.getItem("jwt")) {
       const jwt = localStorage.getItem("jwt");
-      auth.getContent(jwt).then((res) => {
-        if (res) {
-          setLoggedIn(true);
-          history.push("/");
-        }
-      });
+      auth
+        .getContent(jwt)
+        .then((res) => {
+          if (res) {
+            setLoggedIn(true);
+            history.push("/");
+          }
+        })
+        .catch((err) => console.log(`АЛЯРМ!: ${err}`));
     }
   }
 
   React.useEffect(() => {
     tokenCheck();
-  });
+  }, []);
 
   const [infoTooltip, setInfoTooltip] = React.useState("");
 
   function closeTooltip() {
-    if (infoTooltip === "fail") {
-      setInfoTooltip("");
-    } else if (infoTooltip === "success") {
-      setInfoTooltip("");
-    }
+    setInfoTooltip("");
   }
 
   const handleRegister = (password, email) => {

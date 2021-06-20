@@ -13,22 +13,8 @@ function PopupWithForm(props) {
     buttonDisabled,
   } = props;
 
-  const submitButton = React.useRef();
-
-  if (submitButton.current !== undefined) {
-    if (buttonDisabled) {
-      submitButton.current.classList.add("popup__submit-btn_disabled");
-      submitButton.current.setAttribute("disabled", true);
-    } else {
-      submitButton.current.classList.remove("popup__submit-btn_disabled");
-      submitButton.current.removeAttribute("disabled");
-    }
-  }
-
   return (
-    <section
-      className={`popup popup_type_${name} ${isOpen ? "popup_opened" : ""}`}
-    >
+    <section className={`popup popup_type_${name} ${isOpen && "popup_opened"}`}>
       <div className="popup__overlay" onClick={onClose} />
       <div className="popup__content">
         <button
@@ -46,10 +32,12 @@ function PopupWithForm(props) {
         >
           <fieldset className="popup__fieldset">{children}</fieldset>
           <button
-            className="popup__submit-btn btn-opacity btn-opacity_type_high"
+            className={`popup__submit-btn btn-opacity btn-opacity_type_high ${
+              buttonDisabled && "popup__submit-btn_disabled"
+            }`}
             tabIndex={18}
             type="submit"
-            ref={submitButton}
+            disabled={buttonDisabled && true}
           >
             {buttonText || defaultButtonText}
           </button>

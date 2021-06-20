@@ -7,17 +7,17 @@ function EditAvatarPopup(props) {
   const [buttonDisabled, setButtonDisabled] = React.useState(true);
   const [validationError, setValidationError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState("");
-  const [eventTarget, setEventTarget] = React.useState({});
+  const [avatar, setAvatar] = React.useState("");
 
   function handleSubmit(e) {
     e.preventDefault();
-    onUpdateAvatar(eventTarget.value);
-    eventTarget.value = "";
+    onUpdateAvatar(avatar);
+    setAvatar("");
     setButtonDisabled(true);
   }
 
   function clearInputValue() {
-    eventTarget.value = "";
+    setAvatar("");
     setValidationError(false);
     setErrorMessage("");
     setButtonDisabled(true);
@@ -37,7 +37,7 @@ function EditAvatarPopup(props) {
   }
 
   function onChange(e) {
-    setEventTarget(e.target);
+    setAvatar(e.target.value);
     checkInputValidity(e.target);
   }
 
@@ -65,6 +65,7 @@ function EditAvatarPopup(props) {
             onChange={onChange}
             placeholder="Ссылка на картинку"
             required
+            value={avatar}
           />
           <span
             className={`link-input-error ${

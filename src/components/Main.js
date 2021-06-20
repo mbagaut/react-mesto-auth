@@ -23,7 +23,7 @@ function Main(props) {
             <img
               className="person__photo"
               src={`${currentUser.avatar}`}
-              alt="П. И. Бекетов"
+              alt="Имя пользователя"
             />
             <button
               onClick={onEditAvatar}
